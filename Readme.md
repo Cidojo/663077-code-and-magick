@@ -1,7 +1,7 @@
 # Учебный проект «Код и Магия» [![Build status][travis-image]][travis-url]
 
 * Студент: [Максим Романов](https://up.htmlacademy.ru/javascript/15/user/663077).
-* Наставник: `Неизвестно`.
+* Наставник: [Анна Тюрина](https://htmlacademy.ru/profile/anntv).
 
 ---
 
