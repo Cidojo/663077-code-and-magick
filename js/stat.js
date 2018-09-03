@@ -43,7 +43,7 @@ window.renderStatistics = function (ctx, names, times) {
     if (names[i] === 'Вы') {
       ctx.fillStyle = 'rgba(255, 0, 0, 1)';
     } else {
-      var randomSaturay = Math.round(Math.random()) * 100;
+      var randomSaturay = Math.floor(Math.random() * 100);
       ctx.fillStyle = 'hsl(240, ' + randomSaturay + '%, 50%)';
     }
     ctx.fillText(names[i], CLOUD_X + GAP + (BAR_WIDTH + BAR_GAP) * i, CLOUD_Y + CLOUD_HEIGHT - GAP);
