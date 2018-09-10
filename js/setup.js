@@ -1,12 +1,12 @@
 'use strict';
 
-// ----------------------------------------
-// PART1
-// ----------------------------------------
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// Часть 1. Создание массива из 4-х объектов - похожих волшебников
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-// DATA
+// ИСХОДНЫЕ ДАННЫЕ
 
-var WIZARD_CHARACTERISTICS = {
+var WIZARD_PARTS = {
   names: ['Иван', 'Хуан', 'Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'],
   surnames: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
   coatColor: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
@@ -15,20 +15,20 @@ var WIZARD_CHARACTERISTICS = {
 
 var WIZARDS_QTY = 4;
 
-// NODES.p1
+// НОДЫ
 
 document.querySelector('.setup').classList.remove('hidden');
 
-// METHODS.p1
+// ФУНКЦИИ И МЕТОДЫ
 
-// get random number from interval
+// возвращает случайное число из интервала, необязательный параметр round - окончание числа, д.б. кратным 5 (пример 50, 100, 150 и т.п.).
 
 function getRandomInt(min, max, round) {
   round = round || 1;
   return Math.round(((min + Math.round(Math.random() * (max - min))) / round)) * round;
 }
 
-// get wizard unique property
+// возвращает имя из массива имен и удалет отобранное имя из исходного массива.
 
 function getWizardName(names) {
   var randomIndex = getRandomInt(0, names.length - 1);
@@ -39,7 +39,7 @@ function getWizardName(names) {
   return name;
 }
 
-// RESULT FUNCTION - generates wizards
+// РЕЗУЛЬТАТ - функция возвращает массив объектов - волшебников с уникальными именами и произвольно раскрашеными.
 
 function getWizard(obj) {
   var wizards = [];
@@ -58,15 +58,15 @@ function getWizard(obj) {
   return wizards;
 }
 
-// PART1 CALLBACK
+// Часть 1 Вызов результата
 
-var similarWizards = getWizard(WIZARD_CHARACTERISTICS);
+var similarWizards = getWizard(WIZARD_PARTS);
 
-// ----------------------------------------
-// PART2
-// ----------------------------------------
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// Часть 2. Создание функции создания фрагмента DOM - дерева, соответствующего волшебнику.
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-// DATA
+// ИСХОДНЫЕ ДАННЫЕ
 
 var SIMILAR_WIZARD_TEMPLATE = {
   template: '#similar-wizard-template',
@@ -76,19 +76,19 @@ var SIMILAR_WIZARD_TEMPLATE = {
   eyes: '.wizard-eyes'
 };
 
-// NODES.p2
+// НОДЫ
 
 var similarList = document.querySelector('.setup-similar-list');
 
-// METHODS.p2
+// ФУНКЦИИ И МЕТОДЫ
 
-// fill textContent property of an owner
+// заполнить свойство TextContent переданного DOM - элемента переданным значением
 
 function fillTextContent(owner, text) {
   owner.textContent = text;
 }
 
-// generate new HTML fragment in DOM
+// шаблон/конструктор объекта с заданными методами
 
 function BuildTemplate(Obj) {
   Object.assign(this, Obj);
@@ -104,31 +104,35 @@ function BuildTemplate(Obj) {
   };
 }
 
-function addFillColor(owner, styleValue) {
-  owner.style.fill = styleValue;
+// создает любой новый или меняет старый стиль DOM - элемента.
+
+function addStyle(owner, styleName, styleValue) {
+  owner.style[styleName] = styleValue;
 }
 
-// PART2 RESULT - Function generate single documentFragment
+// РЕЗУЛЬТАТ - Функция, создает фрагмент DOM - дерева, соответствующий волшебнику
 
 function generateFragment(obj, data) {
   obj.getNest();
 
   fillTextContent(obj.getDomElement(obj.title), data.name + ' ' + data.surname);
-  addFillColor(obj.getDomElement(obj.coat), data.coatColor);
-  addFillColor(obj.getDomElement(obj.eyes), data.eyesColor);
+  addStyle(obj.getDomElement(obj.coat), 'fill', data.coatColor);
+  addStyle(obj.getDomElement(obj.eyes), 'fill', data.eyesColor);
 
   return obj.fragment;
 }
 
-// ----------------------------------------
-// PART3
-// ----------------------------------------
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// ЧАСТЬ 3
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-// NODES.p3
+// НОДЫ
 
 document.querySelector('.setup-similar').classList.remove('hidden');
 
-// METHODS.p3
+// ФУНКЦИИ И МЕТОДЫ
+
+// Генерирует заданное количество волшебников, использую разработанные методы в Ч1 и Ч2
 
 function renderSimilarWizards(obj, data) {
   var documentFragment = document.createDocumentFragment();
@@ -140,6 +144,6 @@ function renderSimilarWizards(obj, data) {
   similarList.appendChild(documentFragment);
 }
 
-// PART3 CALLBACK
+// Часть 3 вызов результата
 
 renderSimilarWizards(SIMILAR_WIZARD_TEMPLATE, similarWizards);
