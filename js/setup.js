@@ -1,5 +1,11 @@
 'use strict';
 
+// 1. Константы (магические числа, строки, объекты, массивы)
+// 2. Многократно используемые ноды (получаемые через querySelector)
+// 3. Методы
+// 4. Обработчики событий
+// 5. Исполняемый код (вызов методов).
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // Часть 1. Создание массива из 4-х объектов - похожих волшебников
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -15,12 +21,50 @@ var WIZARD_PARTS = {
 
 var WIZARDS_QTY = 4;
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+var WIZARD_NAME_MAX_LENGTH = 25;
+var WIZARD_NAME_MIN_LENGTH = 2;
+
 // НОДЫ
 
-document.querySelector('.setup').classList.remove('hidden');
+var setup = document.querySelector('.setup');
+var setupOpenButton = document.querySelector('.setup-open');
+var setupCloseButton = document.querySelector('.setup-close');
+var userNameInput = document.querySelector('.setup-user-name');
 
 // ФУНКЦИИ И МЕТОДЫ
 
+// обработка события 'click' по иконке вызова настроек
+
+function openSetupWindow() {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onSetupWindowEscPress);
+}
+
+function closeSetupWindow() {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onSetupWindowEscPress);
+}
+
+function onSetupWindowEscPress(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeSetupWindow();
+  }
+}
+
+function userNameValidity(evt) {
+  var target = evt.target.validity;
+  if (target.tooShort) {
+    target.setCustomValidity('Имя должно состоять минимум из ' + WIZARD_NAME_MIN_LENGTH + ' символов');
+  } else if (target.tooLong) {
+    target.setCustomValidity('Имя не должно превышать ' + WIZARD_NAME_MAX_LENGTH + ' символов');
+  } else if (target.missingValue) {
+    target.setCustomValidity('Обязательное поле');
+  } else {
+    target.setCustomValidity('');
+  }
+}
 // возвращает случайное число из интервала, необязательный параметр round - окончание числа, д.б. кратным 5 (пример 50, 100, 150 и т.п.).
 
 function getRandomInt(min, max, round) {
@@ -38,6 +82,31 @@ function getWizardName(names) {
 
   return name;
 }
+
+// Обработка событий
+
+setupOpenButton.addEventListener('click', openSetupWindow);
+setupOpenButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openSetupWindow();
+  }
+});
+setupCloseButton.addEventListener('click', closeSetupWindow);
+setupCloseButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetupWindow();
+  }
+});
+
+userNameInput.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onSetupWindowEscPress);
+});
+
+userNameInput.addEventListener('blur', function () {
+  document.addEventListener('keydown', onSetupWindowEscPress);
+});
+
+userNameInput.addEventListener('invalid', userNameValidity);
 
 // РЕЗУЛЬТАТ - функция возвращает массив объектов - волшебников с уникальными именами и произвольно раскрашеными.
 
