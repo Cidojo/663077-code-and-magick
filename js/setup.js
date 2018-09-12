@@ -9,8 +9,8 @@
 var WIZARD_PARTS = {
   names: ['Иван', 'Хуан', 'Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'],
   surnames: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
-  coatColor: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
-  eyesColor: ['black', 'red', 'blue', 'yellow', 'green']
+  coatColors: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
+  eyesColors: ['black', 'red', 'blue', 'yellow', 'green']
 };
 
 var WIZARDS_QTY = 4;
@@ -28,7 +28,7 @@ function getRandomInt(min, max, round) {
   return Math.round(((min + Math.round(Math.random() * (max - min))) / round)) * round;
 }
 
-// возвращает имя из массива имен и удалет отобранное имя из исходного массива.
+// возвращает имя из массива имен и удаляет отобранное имя из исходного массива.
 
 function getWizardName(names) {
   var randomIndex = getRandomInt(0, names.length - 1);
@@ -50,8 +50,8 @@ function getWizard(obj) {
     var wizard = {
       name: getWizardName(namesClone),
       surname: getWizardName(surnamesClone),
-      coatColor: obj.coatColor[getRandomInt(0, obj.coatColor.length - 1)],
-      eyesColor: obj.eyesColor[getRandomInt(0, obj.eyesColor.length - 1)]
+      coatColor: obj.coatColors[getRandomInt(0, obj.coatColors.length - 1)],
+      eyesColor: obj.eyesColors[getRandomInt(0, obj.eyesColors.length - 1)]
     };
     wizards.push(wizard);
   }
@@ -89,20 +89,31 @@ function fillTextContent(owner, text) {
 }
 
 // шаблон/конструктор объекта с заданными методами
-
-function BuildTemplate(Obj) {
-  Object.assign(this, Obj);
-
-  this.getTemplate = function () {
-    return document.querySelector(this.template).cloneNode(true).content;
-  };
-  this.getNest = function () {
-    this.fragment = this.getTemplate().querySelector(this.nest);
-  };
-  this.getDomElement = function (selector) {
-    return this.fragment.querySelector(selector);
-  };
+function mergeObjects() {
+  var resObj = {};
+  for (var i = 0; i < arguments.length; i += 1) {
+    var obj = arguments[i];
+    var keys = Object.keys(obj);
+    for (var j = 0; j < keys.length; j++) {
+      resObj[keys[j]] = obj[keys[j]];
+    }
+  }
+  return resObj;
 }
+
+var buildTemplate = {
+  // Object.assign(this, Obj);
+  // mergeObjects(Obj);
+  getTemplate: function () {
+    return document.querySelector(this.template).cloneNode(true).content;
+  },
+  getNest: function () {
+    this.fragment = this.getTemplate().querySelector(this.nest);
+  },
+  getDomElement: function (selector) {
+    return this.fragment.querySelector(selector);
+  }
+};
 
 // создает любой новый или меняет старый стиль DOM - элемента.
 
@@ -138,7 +149,7 @@ function renderSimilarWizards(obj, data) {
   var documentFragment = document.createDocumentFragment();
 
   for (var i = 0; i < WIZARDS_QTY; i++) {
-    documentFragment.appendChild(generateFragment(new BuildTemplate(obj), data[i]));
+    documentFragment.appendChild(generateFragment(mergeObjects(buildTemplate, obj), data[i]));
   }
 
   similarList.appendChild(documentFragment);
